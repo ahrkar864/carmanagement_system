@@ -19,8 +19,8 @@ $(document).ready(function() {
                 $('#p_required').remove();
                 $('#pc_required').remove();
 
-                console.log(user);
                 $('#name').val(user.name);
+                $('#email').val(user.email);
                 $('#employee_number').val(user.employee_number);
                 $('#password').val(user.password);
                 $('#password_confirmation').val(user.password);
@@ -30,9 +30,6 @@ $(document).ready(function() {
                 $('select[name="position_id"]').val(user.position_id).change();
                 $('select[name="role_id"]').val(res.role_id).change(); // Set the role ID
                 $('select[name="status"]').val(user.status).change();
-
-  
-
                 $('.error-text').empty();
                 $('#formId').val(id);
                 $('#formMethod').val('PUT');
@@ -72,16 +69,24 @@ $(document).ready(function() {
                     title: 'Success!',
                     text: response.success 
                 }).then(() => {
-                    // $('#branchModal').hide();
                     location.reload();
                 });
             },
             error: function(xhr) {
-                let errors = xhr.responseJSON.errors;
-                $('.error-text').empty(); 
-                $.each(errors, function(field, messages) {
-                    $('#' + field + 'Error').text(messages[0]); 
-                });
+                let response = xhr.responseJSON;
+                if (xhr.status === 422 && response.errors) {
+                    $('.error-text').empty();
+                    $.each(response.errors, function(field, messages) {
+                        $('#' + field + 'Error').text(messages[0]);
+                    });
+                } else {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.error 
+                    });
+                }
             }
         });
     });
@@ -115,11 +120,11 @@ $(document).ready(function() {
                         });
                     },
                     error: function(xhr) {
-                        Swal.fire(
-                            'Error!',
-                            'Something went wrong. Please try again.',
-                            'error'
-                        );
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.error
+                        });
                     }
                 });
             }

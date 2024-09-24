@@ -39,9 +39,13 @@ class PositionController extends Controller
      */
     public function store(PositionRequest $request)
     {
-        $validated = $request->validated();
-        $position = Positions::create($validated);
-        return redirect()->route('positions.index')->with('success', 'Position created successfully.');
+        try {
+            $validated = $request->validated();
+            $position = Positions::create($validated);
+            return response()->json(['success' => 'Position created successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**
@@ -63,8 +67,13 @@ class PositionController extends Controller
      */
     public function edit($id)
     {
-        $data = Positions::find($id);
-        return response()->json($data);
+        try {
+            $data = Positions::find($id);
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
+
     }
 
     /**
@@ -76,13 +85,15 @@ class PositionController extends Controller
      */
     public function update(PositionRequest $request, $id)
     {
-        // dd($id);
-        $position = Positions::findorFail($id);
-        $position->department_id = $request->department_id;
-        $position->name = $request->name;
-        $position->save();
-
-        return response()->json(['success' => 'Position updated successfully.']);
+        try {
+            $position = Positions::findorFail($id);
+            $position->department_id = $request->department_id;
+            $position->name = $request->name;
+            $position->save();
+            return response()->json(['success' => 'Position updated successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**

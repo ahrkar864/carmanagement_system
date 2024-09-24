@@ -37,15 +37,13 @@ class BranchController extends Controller
      */
     public function store(BranchRequest $request)
     {        
-        // try {
-        //     $validated = $request->validated();
-        //     dd("Validation passed, form data:", $validated);
-        // } catch (\Illuminate\Validation\ValidationException $e) {
-        //     dd($e->errors());
-        // }
-        $validated = $request->validated();
-        $branch = Branch::create($validated);
-        return redirect()->route('branches.index')->with('success', 'Branch created successfully.');
+        try {
+            $validated = $request->validated();
+            $branch = Branch::create($validated);
+            return response()->json(['success' => 'Branch created successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
 
     }
 
@@ -68,8 +66,12 @@ class BranchController extends Controller
      */
     public function edit($id)
     {
-        $data = Branch::find($id);
-        return response()->json($data);
+        try {
+            $data = Branch::find($id);
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**
@@ -81,20 +83,23 @@ class BranchController extends Controller
      */
     public function update(BranchRequest $request, $id)
     {
+        try {
+            $branch = Branch::findOrFail($id);
+            $branch->branch_code = $request->branch_code;
+            $branch->branch_name = $request->branch_name;
+            $branch->branch_short_name = $request->branch_short_name;
+            $branch->branch_address = $request->branch_address;
+            $branch->save();
+            return response()->json(['success' => 'Branch updated successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
 
-        $branch = Branch::findOrFail($id);
-        $branch->branch_code = $request->branch_code;
-        $branch->branch_name = $request->branch_name;
-        $branch->branch_short_name = $request->branch_short_name;
-        $branch->branch_address = $request->branch_address;
-        $branch->save();
-    
-        return response()->json(['success' => 'Branch updated successfully.']);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
+    *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -103,7 +108,7 @@ class BranchController extends Controller
         try {
             $item = Branch::findOrFail($id);
             $item->delete();
-            return response()->json(['success' => 'Item deleted successfully']);
+            return response()->json(['success' => 'Branch deleted successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Something went wrong.'], 500);
         }

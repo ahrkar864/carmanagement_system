@@ -1,30 +1,28 @@
 $(document).ready(function() {
-
     $(document).on('click', '#openModal', function() {
         $('#formData')[0].reset(); 
         $('#formId').val('');
         $('#formMethod').val('POST'); 
         $('.error-text').empty(); 
-        $('#branchModal').show();
+        $('#roleModal').show();
     });
-    
-    
+
     $(document).on('click', '.editModal', function() {
         let id = $(this).data('id');
         $.ajax({
             type: 'GET',
-            url: `/admin/branches/${id}/edit`,
+            url: `/admin/roles/${id}/edit`,
             dataType: "json",
             success: function(res) {
-                $('#branch_code').val(res.branch_code);
-                $('#branch_name').val(res.branch_name);
-                $('#branch_short_name').val(res.branch_short_name);
-                $('#branch_address').val(res.branch_address);
-    
-                $('#formMethod').val('PUT');
-                $('#formId').val(id);
+                $('#name').val(res.role.name);
+                $('input[name="permissions[]"]').each(function() {
+                    let permissionId = $(this).val();
+                    $(this).prop('checked', res.rolePermissions.includes(parseInt(permissionId)));
+                });
                 $('.error-text').empty();
-                $('#branchModal').show();
+                $('#formId').val(id);
+                $('#formMethod').val('PUT');
+                $('#roleModal').show();
             },
             error: function(error) {
                 Swal.fire({
@@ -36,7 +34,6 @@ $(document).ready(function() {
         });
     });
     
-    
     $('#formData').on('submit', function(e) {
         e.preventDefault();
         let form = $(this);
@@ -44,14 +41,15 @@ $(document).ready(function() {
     
         let method = $('#formMethod').val();
         let id = $('#formId').val();
-        let actionUrl = (method === 'POST') ? '/admin/branches' : `/admin/branches/${id}`;
-        
+        let actionUrl = (method === 'POST') ? '/admin/roles' : `/admin/roles/${id}`;
+    
         if (method === 'PUT') {
             formData.append('_method', 'PUT');
         }
+    
         $.ajax({
             url: actionUrl,
-            type: 'POST', 
+            type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
@@ -62,7 +60,7 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: response.success 
+                    text: response.success
                 }).then(() => {
                     location.reload();
                 });
@@ -75,6 +73,7 @@ $(document).ready(function() {
                         $('#' + field + 'Error').text(messages[0]);
                     });
                 } else {
+                    
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -84,9 +83,8 @@ $(document).ready(function() {
             }
         });
     });
-    
-    
-    
+
+
     $(document).on('click', '.deleteModal', function() {
         let id = $(this).data('id'); 
         let url = $(this).data('url'); 
@@ -125,13 +123,8 @@ $(document).ready(function() {
                 });
             }
         });
+        
     });
-
+    
 });
-
-
-
-// });
-
-
 

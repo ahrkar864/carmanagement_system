@@ -8,7 +8,7 @@
             <h1 class="text-xl font-semibold text-gray-900">Postions</h1>
             </div>
             <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <button type="button" data-action="{{ route('books.store') }}" @click="addUser = true" class="inline-flex items-center justify-center rounded-md border border-transparent bg-cyan-600 p-2 text-sm font-bold text-white shadow-md hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:w-auto" id="openModal">
+            <button type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-cyan-600 p-2 text-sm font-bold text-white shadow-md hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:w-auto" id="openModal">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -23,7 +23,6 @@
                     <thead class="bg-cyan-600">
                     <tr class="h-10">
                         <th scope="col" class="border-b border-gray-300  bg-opacity-75 py-2 pl-4 pr-3 text-left text-sm font-semibold text-white backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">#</th>
-                        {{-- <th scope="col" class="border-b border-gray-300  bg-opacity-75 py-2 pl-4 pr-3 text-left text-sm font-semibold text-white backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">Branch</th> --}}
                         <th scope="col" class="border-b border-gray-300  bg-opacity-75 py-2 pl-4 pr-3 text-left text-sm font-semibold text-white backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">Name</th> 
                         <th scope="col" class="border-b border-gray-300  bg-opacity-75 py-2 pl-4 pr-3 text-left text-sm font-semibold text-white backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">Department</th>
                         <th scope="col" class="border-b border-gray-300  bg-opacity-75 py-2 pl-4 pr-3 text-left text-sm font-semibold text-white backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">Action</th> 
@@ -32,11 +31,11 @@
                     <tbody class="bg-white " id="tbody">
                         @foreach($positions as $key => $position)
                             <tr class="shadow-lg rounded-full ">
-                                <td class="border-l-2 rounded-lg border-gray-300 bg-gray-50 bg-opacity-75 py-1.5 p-4 text-left text-sm text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">{{ $key + 1 }}</td>
-                                <td class=" border-gray-300 bg-gray-50 bg-opacity-75 py-1.5 p-4 text-left text-sm text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">
+                                <td class="bg-gray-50 bg-opacity-75 py-1 pl-4 pr-3 text-left text-sm font-semibold text-gray-700 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">{{ $key + 1 }}</td>
+                                <td class="bg-gray-50 bg-opacity-75 py-1 pl-4 pr-3 text-left text-sm font-semibold text-gray-700 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">
                                     {{ $position->name}}
                                 </td>   
-                                <td class=" border-gray-300 bg-gray-50 bg-opacity-75 py-1.5 p-4 text-left text-sm text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">
+                                <td class="bg-gray-50 bg-opacity-75 py-1 pl-4 pr-3 text-left text-sm font-semibold text-gray-700 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">
                                     {{ $position->department->name }}
                                 </td> 
                                 <td class="border-r-2 rounded-lg border-gray-300 bg-gray-50 bg-opacity-75 py-1.5 p-4 text-left text-sm text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8">
@@ -90,7 +89,7 @@
                 <div class="card border border-cyan-700 rounded ">
                     <div class="card-header border-b-2">
                         <div class="flex px-4 py-2 justify-between items-center">
-                            <h3 class="font-bold text-cyan-600">Create Branch</h3>
+                            <h3 class="font-bold text-cyan-600">Create Position</h3>
                            <button class="text-rose-600 font-extrabold"  onclick="closeModal('#positionModal')">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -156,12 +155,5 @@
 @section('script')
 
 <script src="{{ asset('/js/position_crud.js') }}"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        // $('#positionsTable').DataTable();
-    });
-</script>
-
-
 @endsection
 

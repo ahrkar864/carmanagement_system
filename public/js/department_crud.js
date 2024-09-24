@@ -24,7 +24,11 @@ $(document).ready(function() {
                 $('#departmentModal').show();
             },
             error: function(error) {
-                console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.error 
+                });
             }
         });
     });
@@ -63,11 +67,19 @@ $(document).ready(function() {
                 });
             },
             error: function(xhr) {
-                let errors = xhr.responseJSON.errors;
-                $('.error-text').empty(); 
-                $.each(errors, function(field, messages) {
-                    $('#' + field + 'Error').text(messages[0]); 
-                });
+                let response = xhr.responseJSON;
+                if (xhr.status === 422 && response.errors) {
+                    $('.error-text').empty();
+                    $.each(response.errors, function(field, messages) {
+                        $('#' + field + 'Error').text(messages[0]);
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.error
+                    });
+                }
             }
         });
     });
@@ -93,20 +105,20 @@ $(document).ready(function() {
                         _token: $('meta[name="csrf-token"]').attr('content'), 
                     },
                     success: function(response) {
-                        Swal.fire(
-                            'Deleted!',
-                            'Your item has been deleted.',
-                            'success'
-                        ).then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.success 
+                        }).then(() => {
                             location.reload();
                         });
                     },
                     error: function(xhr) {
-                        Swal.fire(
-                            'Error!',
-                            'Something went wrong. Please try again.',
-                            'error'
-                        );
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.error
+                        });
                     }
                 });
             }

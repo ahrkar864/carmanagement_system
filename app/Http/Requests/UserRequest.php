@@ -34,6 +34,7 @@ class UserRequest extends FormRequest
                 'max:255',
                 // Rule::unique('users', 'employee_number')->ignore($userId)
             ],
+            'email' => 'required|string|email|max:255',
             'password' => $userId ? 'nullable|string|min:8|confirmed' : 'required|string|min:8|confirmed',
             'password_confirmation' => $userId ? 'nullable' : 'required',
             'branch_id' => 'required|exists:branches,id',
@@ -41,7 +42,7 @@ class UserRequest extends FormRequest
             'position_id'  => 'required|exists:positions,id',
             'department_id'  => 'required|exists:departments,id',
             'role_id' => 'required','exists:roles,id',
-             'status' => 'required','in:1,0',
+            'status' => 'required','in:1,0',
         ];
 
     }

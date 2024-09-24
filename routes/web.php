@@ -39,9 +39,8 @@ Route::resource('admin/departments', DepartmentController::class);
 
 Route::resource('admin/positions', PositionController::class);
 
-Route::get('admin/roles', [RoleController::class, 'index'])->name('roles.index');
+Route::resource('admin/roles', RoleController::class);
 
-Route::get('admin/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+Route::resource('admin/permissions', PermissionController::class);
 
-// Route::get('admin/users', [UserController::class, 'index'])->name('users.index');
 Route::resource('admin/users', UserController::class);

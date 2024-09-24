@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\RoleRequest;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -16,8 +18,8 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::all();
-        return view('admins.roles.index',compact('roles'));
-
+        $permissions = Permission::all();
+        return view('admins.roles.index',compact('roles','permissions'));
     }
 
     /**
@@ -27,7 +29,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -36,9 +38,15 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
-        //
+        try {
+            $role = Role::create(['name' => $request->input('name')]);
+            $role->syncPermissions($request->input('permissions'));
+            return response()->json(['success' => 'Role created successfully']);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -60,7 +68,20 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        //
+
+
+        try {
+            $role = Role::findOrFail($id);
+            $permissions = Permission::all();
+            $rolePermissions = $role->permissions->pluck('id')->toArray();
+            return response()->json([
+                'role' => $role,
+                'rolePermissions' => $rolePermissions,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
+
     }
 
     /**
@@ -70,12 +91,20 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RoleRequest $request, $id)
     {
-        //
+        try {
+            $role = Role::findOrFail($id);
+            $role->name = $request->input('name');
+            $role->save();
+            $role->syncPermissions($request->input('permissions', []));
+            return response()->json(['success' => 'Role updated successfully']);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Something went wrong: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
+    /**in
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -83,6 +112,13 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $role = Role::findOrFail($id);
+            $role->permissions()->detach();
+            $role->delete();
+            return response()->json(['success' => 'Role deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong.'], 500);
+        }
     }
 }

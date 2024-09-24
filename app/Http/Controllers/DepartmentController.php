@@ -40,9 +40,13 @@ class DepartmentController extends Controller
      */
     public function store(DepartmentRequest $request)
     {
-        $validated = $request->validated();
-        $department = Departments::create($validated);
-        return redirect()->route('departments.index')->with('success', 'Position created successfully.');
+        try {
+            $validated = $request->validated();
+            $department = Departments::create($validated);
+            return response()->json(['success' => 'Department created successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**
@@ -64,8 +68,12 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
-        $data = Departments::find($id);
-        return response()->json($data);
+        try {
+            $data = Departments::find($id);
+            return response()->json($data);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**
@@ -78,12 +86,17 @@ class DepartmentController extends Controller
     public function update(DepartmentRequest $request, $id)
     {
 
-        $department = Departments::findOrFail($id);
-        $department->branch_id = $request->branch_id;
-        $department->name = $request->name;
-        $department->save();
-    
-        return response()->json(['success' => 'Department updated successfully.']);
+
+
+        try {
+            $department = Departments::findOrFail($id);
+            $department->branch_id = $request->branch_id;
+            $department->name = $request->name;
+            $department->save();
+            return response()->json(['success' => 'Department updated successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Something went wrong'], 500);
+        }
     }
 
     /**
@@ -99,7 +112,7 @@ class DepartmentController extends Controller
             $item->delete();
             return response()->json(['success' => 'Department deleted successfully']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Something went wrong.'], 500);
+            return response()->json(['error' => 'Something went wrong'], 500);
         }
     }
 }

@@ -24,12 +24,15 @@ $(document).ready(function() {
                 $('#positionModal').show();
             },
             error: function(error) {
-                console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.error 
+                });
             }
         });
     });
     $('#formData').on('submit', function(e) {
-
         e.preventDefault();
         let form = $(this);
         let formData = new FormData(form[0]);
@@ -57,20 +60,27 @@ $(document).ready(function() {
                     title: 'Success!',
                     text: response.success 
                 }).then(() => {
-                    // $('#branchModal').hide();
                     location.reload();
                 });
             },
             error: function(xhr) {
-                let errors = xhr.responseJSON.errors;
-                $('.error-text').empty(); 
-                $.each(errors, function(field, messages) {
-                    $('#' + field + 'Error').text(messages[0]); 
-                });
+                let response = xhr.responseJSON;
+                if (xhr.status === 422 && response.errors) {
+                    $('.error-text').empty();
+                    $.each(response.errors, function(field, messages) {
+                        $('#' + field + 'Error').text(messages[0]);
+                    });
+                } else {
+                    
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.error 
+                    });
+                }
             }
         });
     });
-
 
     $(document).on('click', '.deleteModal', function() {
         let id = $(this).data('id'); 
@@ -101,11 +111,11 @@ $(document).ready(function() {
                         });
                     },
                     error: function(xhr) {
-                        Swal.fire(
-                            'Error!',
-                            'Something went wrong. Please try again.',
-                            'error'
-                        );
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.error
+                        });
                     }
                 });
             }

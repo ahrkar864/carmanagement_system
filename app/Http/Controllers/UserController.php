@@ -46,7 +46,6 @@ class UserController extends Controller
 
     public function checkLogin(Request $request)
     {
-        // dd($request->all());
         $data = $request->validate([
             'email'=>'required',
             'password' => 'required',
@@ -54,13 +53,10 @@ class UserController extends Controller
 
         $this->repository->saveLog($data);
         $user = User::where(["email" => $data['email']])->first();
-        // dd(Hash::make($data['password']), $user->password);
         if ($user && Hash::check($data['password'], $user->password))
         {
-            if($user->email=='superadmin@mail.com'){
-                Auth::login($user);                    
-                return redirect('/admins');
-            }
+            Auth::login($user);
+            return redirect('/admins');
         }
         else{
             return redirect()->route('admins.login')->with('fails','Wrong Password');
@@ -69,8 +65,7 @@ class UserController extends Controller
     }
 
     public function logout()
-    {
-        // dd('hi');
+{
         Auth::logout();
 
         return redirect('login');
@@ -123,7 +118,6 @@ class UserController extends Controller
     public function create()
     {
         getRequiredData();
-        // $roles = Role::pluck('name','name')->all();
         $departments            = Department::all();
         $positions              = Position::all();
         $roles                  = Role::all();
@@ -190,6 +184,7 @@ class UserController extends Controller
             $user = User::create([
                 'title' => $request->title,
                 'name' => $request->name,
+                'email' => $request->email,
                 'employee_number' => $request->employee_number,
                 'password' => Hash::make($request->password), 
                 'branch_id' => $request->branch_id,
@@ -200,10 +195,10 @@ class UserController extends Controller
             $user->assignRole($request->input('role_id')); 
             DB::commit(); 
             return response()->json(['success' => 'User created and role assigned successfully.']);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Log::debug($e->getMessage());
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong'], 500);
         }
 
     }

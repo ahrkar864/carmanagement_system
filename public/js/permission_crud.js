@@ -4,27 +4,22 @@ $(document).ready(function() {
         $('#formData')[0].reset(); 
         $('#formId').val('');
         $('#formMethod').val('POST'); 
-        $('.error-text').empty(); 
-        $('#branchModal').show();
+        $('.error-text').empty();
+        $('#permissionModal').show();
     });
-    
-    
+
     $(document).on('click', '.editModal', function() {
         let id = $(this).data('id');
         $.ajax({
             type: 'GET',
-            url: `/admin/branches/${id}/edit`,
+            url: `/admin/permissions/${id}/edit`,
             dataType: "json",
             success: function(res) {
-                $('#branch_code').val(res.branch_code);
-                $('#branch_name').val(res.branch_name);
-                $('#branch_short_name').val(res.branch_short_name);
-                $('#branch_address').val(res.branch_address);
-    
-                $('#formMethod').val('PUT');
-                $('#formId').val(id);
+                $('#name').val(res.name);
                 $('.error-text').empty();
-                $('#branchModal').show();
+                $('#formId').val(id);
+                $('#formMethod').val('PUT');
+                $('#permissionModal').show();
             },
             error: function(error) {
                 Swal.fire({
@@ -33,10 +28,9 @@ $(document).ready(function() {
                     text: response.error 
                 });
             }
-        });
+        }); 
     });
-    
-    
+
     $('#formData').on('submit', function(e) {
         e.preventDefault();
         let form = $(this);
@@ -44,14 +38,15 @@ $(document).ready(function() {
     
         let method = $('#formMethod').val();
         let id = $('#formId').val();
-        let actionUrl = (method === 'POST') ? '/admin/branches' : `/admin/branches/${id}`;
-        
+        let actionUrl = (method === 'POST') ? '/admin/permissions' : `/admin/permissions/${id}`;
+    
         if (method === 'PUT') {
             formData.append('_method', 'PUT');
         }
+    
         $.ajax({
             url: actionUrl,
-            type: 'POST', 
+            type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
@@ -62,7 +57,7 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: response.success 
+                    text: response.success
                 }).then(() => {
                     location.reload();
                 });
@@ -84,9 +79,8 @@ $(document).ready(function() {
             }
         });
     });
-    
-    
-    
+
+
     $(document).on('click', '.deleteModal', function() {
         let id = $(this).data('id'); 
         let url = $(this).data('url'); 
@@ -128,10 +122,3 @@ $(document).ready(function() {
     });
 
 });
-
-
-
-// });
-
-
-
