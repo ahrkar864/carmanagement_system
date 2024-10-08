@@ -21,6 +21,8 @@ class CreateBranchesTable extends Migration
             $table->string('branch_address')->nullable();
             $table->string('branch_phone_no')->nullable();
             $table->boolean('branch_active')->default('0');
+            $table->decimal('latitude', 10, 8)->nullable();   // Latitude column with precision
+            $table->decimal('longitude', 11, 8)->nullable(); 
             $table->timestamps();
         });
     }

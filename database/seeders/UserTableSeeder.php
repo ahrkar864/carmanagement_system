@@ -22,6 +22,7 @@ class UserTableSeeder extends Seeder
             'name'                  => 'superadmin',        
             'email'                 => 'superadmin@mail.com',
             'status'                =>1,
+            'branch_id'             =>1,
             'password' => Hash::make('superadmin')
         ]);
         $role = Role::find(1);

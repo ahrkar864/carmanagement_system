@@ -128,57 +128,6 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-
-        // $input = $this->validate($request, [
-        //     'title'             => 'required',
-        //     'name'              => 'required',
-        //     'emp_id'            => 'required|unique:users,emp_id',
-        //     'password'          => 'required|same:confirm-password',
-        //     'department_id'     => 'required',
-        //     'category_id'       => 'required',
-        //     'position_id'       => 'required',
-        //     'roles'             => 'required',
-        //     'status'            => 'required',
-        //     'from_branch_id'    => 'required'
-        // ]);
-
-        // try{
-        //     DB::beginTransaction();
-        //     $input['password'] = Hash::make($input['password']);
-        //     $user['from_branch_id'] = $request->from_branch_id;
-        //     $user = User::create($request->except('category_id','branch_id'));
-        //     $user->assignRole($request->input('roles'));
-        //     if(count($request->category_id)!=0)
-        //     {
-        //         foreach($request->category_id as $cat)
-        //         {
-        //             $user_cat = new UserCategory();
-        //             $user_cat->user_id      = $user->id;
-        //             $user_cat->category_id  = $cat;
-        //             $user_cat->save();
-        //         }
-
-        //     }
-
-        //     if(count($request->branch_id)!=0)
-        //     {
-        //         foreach($request->branch_id as $branch_id)
-        //         {
-        //             $user_cat = new UserBranch();
-        //             $user_cat->user_id      = $user->id;
-        //             $user_cat->branch_id  = $branch_id;
-        //             $user_cat->save();
-        //         }
-        //     }
-        //     DB::commit();
-        //     return redirect()->route('users.index')
-        //                     ->with('success','User created successfully');
-        // }
-        //     catch(Exception $e)
-        // {
-        //     DB::rollBack();
-        //     return $e->getMessage();
-        // }
         DB::beginTransaction();
         try {
             $user = User::create([

@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\Api\BookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\DocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('get_books', [BookController::class, 'index']);
+Route::post('/login', [ApiController::class, 'login']);
+
+Route::get('/branches', [ApiController::class, 'branches']);
+
+Route::post('/store-document', [DocumentController::class, 'store']);
